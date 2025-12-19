@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
-class Classwork1ProviderScreen extends StatelessWidget {
-  const Classwork1ProviderScreen({super.key});
+final resultProvider = StateProvider<double>((ref) {
+  return 0;
+});
+
+class Classwork1ProviderScreen extends ConsumerStatefulWidget {
+  const Classwork1ProviderScreen({Key? key}) : super(key: key);
 
   @override
+  ConsumerState<Classwork1ProviderScreen> createState() =>
+      _Classwork1ProviderScreenState();
+}
+
+class _Classwork1ProviderScreenState
+    extends ConsumerState<Classwork1ProviderScreen> {
+  @override
   Widget build(BuildContext context) {
+    final TextEditingController _firstNoController = TextEditingController();
+    final TextEditingController _secondNoController = TextEditingController();
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -45,6 +61,7 @@ class Classwork1ProviderScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextFormField(
+                  controller: _firstNoController,
                   keyboardType: TextInputType.number,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
@@ -70,6 +87,7 @@ class Classwork1ProviderScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextFormField(
                   keyboardType: TextInputType.number,
+                  controller: _secondNoController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Number 2',
@@ -96,7 +114,11 @@ class Classwork1ProviderScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          ref.read(resultProvider.notifier).state =
+                              double.parse(_firstNoController.text) +
+                              double.parse(_secondNoController.text);
+                        },
                         icon: const Icon(Icons.add),
                         label: const Text('Add'),
                         style: ElevatedButton.styleFrom(
@@ -112,7 +134,11 @@ class Classwork1ProviderScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          ref.read(resultProvider.notifier).state =
+                              double.parse(_firstNoController.text) -
+                              double.parse(_secondNoController.text);
+                        },
                         icon: const Icon(Icons.remove),
                         label: const Text('Subtract'),
                         style: ElevatedButton.styleFrom(
@@ -135,7 +161,11 @@ class Classwork1ProviderScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          ref.read(resultProvider.notifier).state =
+                              double.parse(_firstNoController.text) *
+                              double.parse(_secondNoController.text);
+                        },
                         icon: const Icon(Icons.close),
                         label: const Text('Multiply'),
                         style: ElevatedButton.styleFrom(
@@ -151,7 +181,11 @@ class Classwork1ProviderScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          ref.read(resultProvider.notifier).state =
+                              double.parse(_firstNoController.text) /
+                              double.parse(_secondNoController.text);
+                        },
                         icon: const Icon(Icons.percent),
                         label: const Text('Divide'),
                         style: ElevatedButton.styleFrom(
@@ -185,7 +219,7 @@ class Classwork1ProviderScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '0',
+                          '${ref.watch(resultProvider)}',
                           style: Theme.of(context).textTheme.displayMedium
                               ?.copyWith(color: Colors.white),
                         ),
